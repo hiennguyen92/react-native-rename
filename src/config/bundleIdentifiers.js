@@ -33,6 +33,7 @@ export function bundleIdentifiers(currentAppName, newName, projectName, currentB
       paths: [`${newBundlePath}/MainActivity.java`],
     },
     {
+      // Change iOS BundleID
       regex: `com.mysoundwise.soundwise`,
       replacement: lC_Ns_NewBundleID,
       paths: [
@@ -41,5 +42,14 @@ export function bundleIdentifiers(currentAppName, newName, projectName, currentB
         `ios/soundwise_v2/Info.plist`
       ],
     },
+    {
+      // Change iOS Display Name
+      regex: new RegExp(`(?!\\.)(.|^)Soundwise`, 'g'),
+      replacement: `$1${nS_NewName}`,
+      paths: [
+        'ios/build/info.plist',
+        `ios/soundwise_v2/Info.plist`
+      ],
+    }
   ];
 }
