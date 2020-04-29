@@ -121,7 +121,6 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
                 itemsProcessed += index;
                 console.log(source);
                 if (fs.existsSync(path.join(__dirname, source)) || !fs.existsSync(path.join(__dirname, source))) {
-                  shell.exec(`git rm -r "${path.join(__dirname, dest)}"`)
                   const move = shell.exec(
                     `git mv "${path.join(__dirname, source)}" "${path.join(__dirname, dest)}" 2>/dev/null`
                   );
