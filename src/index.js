@@ -11,7 +11,7 @@ import replace from 'node-replace';
 import shell from 'shelljs';
 import pjson from '../package.json';
 import path from 'path';
-import { foldersAndFiles, foldersAndFilesReplace } from './config/foldersAndFiles';
+import { foldersAndFiles } from './config/foldersAndFiles';
 import { filesToModifyContent } from './config/filesToModifyContent';
 import { bundleIdentifiers } from './config/bundleIdentifiers';
 
@@ -79,15 +79,18 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
       .version('2.4.1')
       .arguments('<newName>')
       .option('-b, --bundleID [value]', 'Set custom bundle identifier eg. "com.junedomingo.travelapp"')
+      .option('-f, --files [value]', 'set files replace eg. [{ "from" : "path", "to": "path" }]')
       .action(newName => {
         const nS_NewName = newName.replace(/\s/g, '');
         const pattern = /^([\p{Letter}\p{Number}])+([\p{Letter}\p{Number}\s]+)$/u;
         const lC_Ns_NewAppName = nS_NewName.toLowerCase();
         const bundleID = program.bundleID ? program.bundleID.toLowerCase() : null;
+        const files = program.files ? program.files : null;
         let newBundlePath;
-        const listOfFoldersAndFiles = foldersAndFiles(currentAppName, newName);
-        const listOfFoldersAndFilesReplace = foldersAndFilesReplace()
+        const listOfFoldersAndFiles = foldersAndFiles();
         const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName, projectName);
+
+        return console.log(JSON.parse(files));
 
         if (bundleID) {
           newBundlePath = bundleID.replace(/\./g, '/');
@@ -107,45 +110,11 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         if (newName === currentAppName || newName === nS_CurrentAppName || newName === lC_Ns_CurrentAppName) {
           return console.log('Please try a different name.');
         }
-
-        // Move files and folders from ./config/foldersAndFiles.js
-        const resolveFoldersAndFiles = new Promise(resolve => {
-          listOfFoldersAndFiles.forEach((element, index) => {
-            const dest = element.replace(new RegExp(nS_CurrentAppName, 'i'), nS_NewName);
-            let itemsProcessed = 1;
-            const successMsg = `/${dest} ${colors.green('RENAMED')}`;
-
-            setTimeout(() => {
-              itemsProcessed += index;
-
-              if (fs.existsSync(path.join(__dirname, element)) || !fs.existsSync(path.join(__dirname, element))) {
-                const move = shell.exec(
-                  `git mv "${path.join(__dirname, element)}" "${path.join(__dirname, dest)}" 2>/dev/null`
-                );
-
-                if (move.code === 0) {
-                  console.log(successMsg);
-                } else if (move.code === 128) {
-                  // if "outside repository" error occured
-                  if (shell.mv('-f', path.join(__dirname, element), path.join(__dirname, dest)).code === 0) {
-                    console.log(successMsg);
-                  } else {
-                    console.log("Ignore above error if this file doesn't exist");
-                  }
-                }
-              }
-
-              if (itemsProcessed === listOfFoldersAndFiles.length) {
-                resolve();
-              }
-            }, 200 * index);
-          });
-        });
       
       // Move files and folders from ./config/foldersAndFiles.js
-        const resolveFoldersAndFilesReplace = new Promise(resolve => {
-          listOfFoldersAndFilesReplace.forEach((element, index) => {
-            const dest = element;
+        const resolveFoldersAndFiles = new Promise(resolve => {
+          listOfFoldersAndFiles.forEach((element, index) => {
+            const dest = 'ios/soundwise_v2/Images.xcassets';
             const source = element.replace(`ios/soundwise_v2/Images.xcassets`, `white-label/1503002103690p/resources`);
             let itemsProcessed = 1;
             const successMsg = `/${dest} ${colors.green('REPLACED')}`;
@@ -288,7 +257,6 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
 
         const rename = () => {
           resolveFoldersAndFiles
-            .then(resolveFoldersAndFilesReplace)
             .then(resolveFilesToModifyContent)
             .then(resolveJavaFiles)
             .then(resolveBundleIdentifiers)
