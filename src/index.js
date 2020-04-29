@@ -11,7 +11,6 @@ import replace from 'node-replace';
 import shell from 'shelljs';
 import pjson from '../package.json';
 import path from 'path';
-import { foldersAndFiles } from './config/foldersAndFiles';
 import { filesToModifyContent } from './config/filesToModifyContent';
 import { bundleIdentifiers } from './config/bundleIdentifiers';
 
