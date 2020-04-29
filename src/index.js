@@ -112,8 +112,8 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         const resolveFoldersAndFiles = new Promise(resolve => {
           if (listOfFoldersAndFiles) {
             listOfFoldersAndFiles.forEach((element, index) => {
-              const dest = element['to'].toString();
-              const source = element['from'].toString();
+              const dest = `${element['to']}`;
+              const source = `${element['from']}`;
               let itemsProcessed = 1;
               const successMsg = `/${dest} ${colors.green('REPLACED')}`;
 
@@ -129,7 +129,7 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
                     console.log(successMsg);
                   } else if (move.code === 128) {
                     // if "outside repository" error occured
-                    if (shell.mv('-f', path.join(__dirname, element), path.join(__dirname, dest)).code === 0) {
+                    if (shell.mv('-f', path.join(__dirname, source), path.join(__dirname, dest)).code === 0) {
                       console.log(successMsg);
                     } else {
                       console.log("Ignore above error if this file doesn't exist");
