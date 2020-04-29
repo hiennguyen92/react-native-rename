@@ -116,13 +116,12 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
               const source = `${element['from']}`;
               let itemsProcessed = 1;
               const successMsg = `/${dest} ${colors.green('REPLACED')}`;
-
               setTimeout(() => {
                 itemsProcessed += index;
                 console.log(source);
                 if (fs.existsSync(path.join(__dirname, source)) || !fs.existsSync(path.join(__dirname, source))) {
                   const move = shell.exec(
-                    `git mv "${path.join(__dirname, source)}" "${path.join(__dirname, dest)}" 2>/dev/null`
+                    `git mv -f "${path.join(__dirname, source)}" "${path.join(__dirname, dest)}" 2>/dev/null`
                   );
 
                   if (move.code === 0) {
@@ -136,7 +135,6 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
                     }
                   }
                 }
-
                 if (itemsProcessed === listOfFoldersAndFiles.length) {
                   resolve();
                 }
