@@ -112,8 +112,8 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         const resolveFoldersAndFiles = new Promise(resolve => {
           if (listOfFoldersAndFiles) {
             listOfFoldersAndFiles.forEach((element, index) => {
-              const dest = element['to'];
-              const source = element['from'];
+              const dest = element['to'].toString();
+              const source = element['from'].toString();
               let itemsProcessed = 1;
               const successMsg = `/${dest} ${colors.green('REPLACED')}`;
 
