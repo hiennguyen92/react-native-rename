@@ -87,10 +87,8 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         const bundleID = program.bundleID ? program.bundleID.toLowerCase() : null;
         const files = program.files ? program.files : null;
         let newBundlePath;
-        const listOfFoldersAndFiles = foldersAndFiles();
+        const listOfFoldersAndFiles = JSON.parse(files)
         const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName, projectName);
-
-        return console.log(JSON.parse(files));
 
         if (bundleID) {
           newBundlePath = bundleID.replace(/\./g, '/');
@@ -110,40 +108,43 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         if (newName === currentAppName || newName === nS_CurrentAppName || newName === lC_Ns_CurrentAppName) {
           return console.log('Please try a different name.');
         }
-      
-      // Move files and folders from ./config/foldersAndFiles.js
+
         const resolveFoldersAndFiles = new Promise(resolve => {
-          listOfFoldersAndFiles.forEach((element, index) => {
-            const dest = 'ios/soundwise_v2/Images.xcassets';
-            const source = element.replace(`ios/soundwise_v2/Images.xcassets`, `white-label/1503002103690p/resources`);
-            let itemsProcessed = 1;
-            const successMsg = `/${dest} ${colors.green('REPLACED')}`;
+          if (listOfFoldersAndFiles) {
+            listOfFoldersAndFiles.forEach((element, index) => {
+              const dest = element['to'];
+              const source = element['from'];
+              let itemsProcessed = 1;
+              const successMsg = `/${dest} ${colors.green('REPLACED')}`;
 
-            setTimeout(() => {
-              itemsProcessed += index;
-              console.log(source);
-              if (fs.existsSync(path.join(__dirname, element)) || !fs.existsSync(path.join(__dirname, element))) {
-                const move = shell.exec(
-                  `git mv -f "${path.join(__dirname, source)}" "${path.join(__dirname, dest)}" 2>/dev/null`
-                );
+              setTimeout(() => {
+                itemsProcessed += index;
+                console.log(source);
+                if (fs.existsSync(path.join(__dirname, source)) || !fs.existsSync(path.join(__dirname, source))) {
+                  const move = shell.exec(
+                    `git mv -f "${path.join(__dirname, source)}" "${path.join(__dirname, dest)}" 2>/dev/null`
+                  );
 
-                if (move.code === 0) {
-                  console.log(successMsg);
-                } else if (move.code === 128) {
-                  // if "outside repository" error occured
-                  if (shell.mv('-f', path.join(__dirname, element), path.join(__dirname, dest)).code === 0) {
+                  if (move.code === 0) {
                     console.log(successMsg);
-                  } else {
-                    console.log("Ignore above error if this file doesn't exist");
+                  } else if (move.code === 128) {
+                    // if "outside repository" error occured
+                    if (shell.mv('-f', path.join(__dirname, element), path.join(__dirname, dest)).code === 0) {
+                      console.log(successMsg);
+                    } else {
+                      console.log("Ignore above error if this file doesn't exist");
+                    }
                   }
                 }
-              }
 
-              if (itemsProcessed === listOfFoldersAndFiles.length) {
-                resolve();
-              }
-            }, 200 * index);
-          });
+                if (itemsProcessed === listOfFoldersAndFiles.length) {
+                  resolve();
+                }
+              }, 200 * index);
+            });
+          }else{
+            resolve();
+          }
         });
 
         // Modify file content from ./config/filesToModifyContent.js
