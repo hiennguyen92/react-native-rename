@@ -18,3 +18,10 @@ export function foldersAndFiles(currentAppName, newName) {
     `ios/${nS_NewName}/${nS_CurrentAppName}.entitlements`,
   ];
 }
+
+export function foldersAndFilesReplace() {
+  return [
+    `ios/soundwise_v2/Images.xcassets/AppIcon.appiconset`,
+    `ios/soundwise_v2/Images.xcassets/LaunchImage.launchimage`,
+  ]
+}
