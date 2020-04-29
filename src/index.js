@@ -11,7 +11,7 @@ import replace from 'node-replace';
 import shell from 'shelljs';
 import pjson from '../package.json';
 import path from 'path';
-import { foldersAndFiles } from './config/foldersAndFiles';
+import { foldersAndFiles, foldersAndFilesReplace } from './config/foldersAndFiles';
 import { filesToModifyContent } from './config/filesToModifyContent';
 import { bundleIdentifiers } from './config/bundleIdentifiers';
 
@@ -86,6 +86,7 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         const bundleID = program.bundleID ? program.bundleID.toLowerCase() : null;
         let newBundlePath;
         const listOfFoldersAndFiles = foldersAndFiles(currentAppName, newName);
+        const listOfFoldersAndFilesReplace = foldersAndFilesReplace()
         const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName, projectName);
 
         if (bundleID) {
@@ -120,6 +121,41 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
               if (fs.existsSync(path.join(__dirname, element)) || !fs.existsSync(path.join(__dirname, element))) {
                 const move = shell.exec(
                   `git mv "${path.join(__dirname, element)}" "${path.join(__dirname, dest)}" 2>/dev/null`
+                );
+
+                if (move.code === 0) {
+                  console.log(successMsg);
+                } else if (move.code === 128) {
+                  // if "outside repository" error occured
+                  if (shell.mv('-f', path.join(__dirname, element), path.join(__dirname, dest)).code === 0) {
+                    console.log(successMsg);
+                  } else {
+                    console.log("Ignore above error if this file doesn't exist");
+                  }
+                }
+              }
+
+              if (itemsProcessed === listOfFoldersAndFiles.length) {
+                resolve();
+              }
+            }, 200 * index);
+          });
+        });
+      
+      // Move files and folders from ./config/foldersAndFiles.js
+        const resolveFoldersAndFilesReplace = new Promise(resolve => {
+          listOfFoldersAndFilesReplace.forEach((element, index) => {
+            const dest = element;
+            const source = element.replace(`ios/soundwise_v2/Images.xcassets`, `white-label/1503002103690p/resources`);
+            let itemsProcessed = 1;
+            const successMsg = `/${dest} ${colors.green('REPLACED')}`;
+
+            setTimeout(() => {
+              itemsProcessed += index;
+              console.log(source);
+              if (fs.existsSync(path.join(__dirname, element)) || !fs.existsSync(path.join(__dirname, element))) {
+                const move = shell.exec(
+                  `git mv -f "${path.join(__dirname, source)}" "${path.join(__dirname, dest)}" 2>/dev/null`
                 );
 
                 if (move.code === 0) {
@@ -252,6 +288,7 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
 
         const rename = () => {
           resolveFoldersAndFiles
+            .then(resolveFoldersAndFilesReplace)
             .then(resolveFilesToModifyContent)
             .then(resolveJavaFiles)
             .then(resolveBundleIdentifiers)
