@@ -85,6 +85,12 @@ export function filesToModifyContent(currentAppName, newName, colors) {
       regex: `#f88822`,
       replacement: `${colors['mainOrange']}`,
       paths: ['android/app/src/main/res/values/colors.xml']
+    },
+    {
+      //Search content
+      regex: `Search Soundwise`,
+      replacement: `Search ${newName}`,
+      paths: ['src/screens-v2/Main/Discover.js']
     }
   ];
 }
