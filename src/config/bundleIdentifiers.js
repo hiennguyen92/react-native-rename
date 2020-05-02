@@ -11,12 +11,7 @@ export function bundleIdentifiers(currentAppName, newName, projectName, currentB
     {
       regex: currentBundleID,
       replacement: newBundleID,
-      paths: [
-        'android/app/BUCK',
-        'android/app/build.gradle',
-        'android/app/src/main/AndroidManifest.xml',
-        'android/app/google-services.json'
-      ],
+      paths: ['android/app/BUCK', 'android/app/build.gradle', 'android/app/src/main/AndroidManifest.xml'],
     },
     {
       regex: currentBundleID,
@@ -44,8 +39,7 @@ export function bundleIdentifiers(currentAppName, newName, projectName, currentB
       paths: [
         `ios/soundwise_v2.xcodeproj/project.pbxproj`,
         'ios/build/info.plist',
-        `ios/soundwise_v2/Info.plist`,
-        `ios/soundwise_v2/GoogleService-Info.plist`
+        `ios/soundwise_v2/Info.plist`
       ],
     },
     {
