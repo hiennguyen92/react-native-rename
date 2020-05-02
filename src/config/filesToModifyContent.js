@@ -1,7 +1,7 @@
 // nS - No Space
 // lC - Lowercase
 
-export function filesToModifyContent(currentAppName, newName) {
+export function filesToModifyContent(currentAppName, newName, colors) {
   const nS_CurrentAppName = currentAppName.replace(/\s/g, '');
   const nS_NewName = newName.replace(/\s/g, '');
 
@@ -50,5 +50,41 @@ export function filesToModifyContent(currentAppName, newName) {
       replacement: `"displayName": "${newName}"`,
       paths: ['app.json'],
     },
+    {
+      //Remove Onboarding
+      regex: `initialRouteName: 'Onboarding'`,
+      replacement: `initialRouteName: 'Login'`,
+      paths: ['src/navigators-v2/index.js']
+    },
+    {
+      //Color Theme 1
+      regex: `mainOrange: '#f76b1c'`,
+      replacement: `mainOrange: '${colors['mainOrange']}'`,
+      paths: ['src/theme.js']
+    },
+    {
+      //Color Theme 2
+      regex: `mainOrangeDarker: '#F73E1C'`,
+      replacement: `mainOrangeDarker: '${colors['mainOrangeDarker']}'`,
+      paths: ['src/theme.js']
+    },
+    {
+      //Color Theme 3
+      regex: `mainOrangeLighter: '#FF8D1A'`,
+      replacement: `mainOrangeLighter: '${colors['mainOrangeLighter']}'`,
+      paths: ['src/theme.js']
+    },
+    {
+      //Color Theme 4
+      regex: `mainBlueError: '#7C6CF5'`,
+      replacement: `mainBlueError: '${colors['mainBlueError']}'`,
+      paths: ['src/theme.js']
+    },
+    {
+      //Splash Screen Color
+      regex: `#f88822`,
+      replacement: `${colors['mainOrange']}`,
+      paths: ['android/app/src/main/res/values/colors.xml']
+    }
   ];
 }
