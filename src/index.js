@@ -90,7 +90,7 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
         let newBundlePath;
         const listOfFoldersAndFiles = JSON.parse(files)
         const listOfColors = JSON.parse(colors)
-        const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName, listOfColors);
+        const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName);
 
         if (bundleID) {
           newBundlePath = bundleID.replace(/\./g, '/');
