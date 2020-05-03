@@ -79,18 +79,18 @@ readFile(path.join(__dirname, 'android/app/src/main/res/values/strings.xml'))
       .arguments('<newName>')
       .option('-b, --bundleID [value]', 'Set custom bundle identifier eg. "com.junedomingo.travelapp"')
       .option('-f, --files [value]', 'set files replace eg. [{ "from" : "path", "to": "path" }]')
-      .option('-c, --colors [value]', 'set colors replace eg. { "mainOrange" : "", "mainOrangeDarker": "", "mainOrangeLighter": "", "mainBlueError": "" }')
+      .option('-t, --themes [value]', 'set colors replace eg. { "mainOrange" : "", "mainOrangeDarker": "", "mainOrangeLighter": "", "mainBlueError": "" }')
       .action(newName => {
         const nS_NewName = newName.replace(/\s/g, '');
         const pattern = /^([\p{Letter}\p{Number}])+([\p{Letter}\p{Number}\s]+)$/u;
         const lC_Ns_NewAppName = nS_NewName.toLowerCase();
         const bundleID = program.bundleID ? program.bundleID.toLowerCase() : null;
         const files = program.files ? program.files : null;
-        const colors = program.colors ? program.colors : null;
+        const themes = program.themes ? program.themes : null;
         let newBundlePath;
         const listOfFoldersAndFiles = JSON.parse(files)
-        const listOfColors = JSON.parse(colors)
-        const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName);
+        const listOfColors = JSON.parse(themes)
+        const listOfFilesToModifyContent = filesToModifyContent(currentAppName, newName, listOfColors);
 
         if (bundleID) {
           newBundlePath = bundleID.replace(/\./g, '/');
