@@ -91,6 +91,12 @@ export function filesToModifyContent(currentAppName, newName, colors) {
       regex: `Search Soundwise`,
       replacement: `Search ${newName}`,
       paths: ['src/screens-v2/Main/Discover.js']
+    },
+    {
+      //Welcome content
+      regex: `Welcome to Soundwise`,
+      replacement: `Welcome to ${newName}`,
+      paths: ['src/screens-v2/Auth/index.js']
     }
   ];
 }
