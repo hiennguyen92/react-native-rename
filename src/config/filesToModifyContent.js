@@ -1,7 +1,7 @@
 // nS - No Space
 // lC - Lowercase
 
-export function filesToModifyContent(currentAppName, newName, colors) {
+export function filesToModifyContent(currentAppName, newName, publisherId, colors) {
   const nS_CurrentAppName = currentAppName.replace(/\s/g, '');
   const nS_NewName = newName.replace(/\s/g, '');
 
@@ -97,6 +97,12 @@ export function filesToModifyContent(currentAppName, newName, colors) {
       regex: `Welcome to Soundwise`,
       replacement: `Welcome to ${newName}`,
       paths: ['src/screens-v2/Auth/index.js']
+    },
+    {
+      //replace config
+      regex: `PUBLISHER_ID: '1503002103690p'`,
+      replacement: `PUBLISHER_ID: '${publisherId}'`,
+      paths: ['src/white-label-config.js']
     }
   ];
 }
