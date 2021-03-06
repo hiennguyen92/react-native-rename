@@ -1,7 +1,7 @@
 // nS - No Space
 // lC - Lowercase
 
-export function filesToModifyContent(currentAppName, newName, publisherId, colors) {
+export function filesToModifyContent(currentAppName, newName, publisherId, colors, defaultPlayback) {
   const nS_CurrentAppName = currentAppName.replace(/\s/g, '');
   const nS_NewName = newName.replace(/\s/g, '');
 
@@ -103,6 +103,12 @@ export function filesToModifyContent(currentAppName, newName, publisherId, color
       regex: `PUBLISHER_ID: '1503002103690p'`,
       replacement: `PUBLISHER_ID: '${publisherId}'`,
       paths: ['src/white-label-config.js']
+    },
+    {
+      //default playback
+      regex: `true,`,
+      replacement: `${defaultPlayback},`,
+      paths: ['src/reducers/playback.js']
     }
   ];
 }
